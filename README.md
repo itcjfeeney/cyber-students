@@ -185,4 +185,7 @@ is no encryption or password hashing. If a hacker was to compromise
 the database, they could easily run a similar program to retrieve all
 of the users personal information and passwords.
 
-test
+James Feeney - C00279785@itcarlow.ie
+Modifications
+1. Added encryption to user details and password hashing to registration.py file
+2. Added decryption code to login.py and user.py files
