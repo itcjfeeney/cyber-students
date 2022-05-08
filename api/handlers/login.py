@@ -1,10 +1,29 @@
+#Added dycrypt code for user details
+
+import os
+
 from datetime import datetime, timedelta
 from time import mktime
 from tornado.escape import json_decode, utf8
 from tornado.gen import coroutine
 from uuid import uuid4
 
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
+
 from .base import BaseHandler
+
+def aes_decrypt(ciphertext):
+    key = "thebestsecretkey"
+    key_bytes = bytes(key, "utf-8")
+    aes_cipher = Cipher(algorithms.AES(key_bytes),
+                        modes.ECB(),
+                        backend=default_backend())
+    aes_decryptor = aes_cipher.decryptor()
+
+    plaintext_bytes = aes_decryptor.update(ciphertext_bytes)
+    plaintext = str(plaintext_bytes, "utf-8")
+    return plaintext
 
 class LoginHandler(BaseHandler):
 
@@ -50,7 +69,7 @@ class LoginHandler(BaseHandler):
             return
 
         user = yield self.db.users.find_one({
-          'email': email
+          'email': aes_decrypt(email)
         }, {
           'password': 1
         })
